@@ -56,29 +56,26 @@ const isEqual = (value1, value2) => {
     if (Number.isNaN(value1) && Number.isNaN(value2))
         return true;
     if (Array.isArray(value1) && Array.isArray(value2)) {
-        if (value1.length !== value2.length)
-            return false;
-        for (let i = 0; i < value1.length; i++) {
-            if (!isEqual(value1[i], value2[i]))
-                return false;
-        }
-        return true;
+        return (
+            value1.length === value2.length &&
+            value1.every((item, i) => isEqual(item, value2[i]))
+        );
     }
     if (isObject(value1) && isObject(value2)) {
         const keysA = Object.keys(value1);
         const keysB = Object.keys(value2);
-        if (keysA.length !== keysB.length)
-            return false;
-        for (let i = 0; i < keysA.length; i++) {
-            const key = keysA[i];
-            if (!Object.prototype.hasOwnProperty.call(value2, key))
-                return false;
-            if (!isEqual(value1[key], value2[key]))
-                return false;
-        }
-        return true;
+
+        return (
+            keysA.length === keysB.length &&
+            keysA.every(
+            (key) =>
+                Object.prototype.hasOwnProperty.call(value2, key) &&
+                isEqual(value1[key], value2[key])
+            )
+        );
     }
-    return false;
+
+        return false;
 }
 
 /**
